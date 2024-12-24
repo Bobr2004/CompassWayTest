@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 
 type ButtonProps = PropsWithChildren & {
-   onClick: () => void;
+   onClick?: () => void;
    isActive?: boolean;
 };
 
