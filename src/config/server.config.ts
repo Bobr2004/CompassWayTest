@@ -1,13 +1,10 @@
 import axios from "axios";
 
-const username = "front9778";
-const password = "custompass1";
+// const username = "akag2ami123";
+// const password = "akagamioo2";
 
 const API = axios.create({
-   baseURL: "http://68.183.74.14:4005/api/",
-   headers: {
-      Authorization: "Basic " + btoa(`${username}:${password}`)
-   }
+   baseURL: "http://68.183.74.14:4005/api/"
 });
 
 export { API };

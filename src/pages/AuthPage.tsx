@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Button } from "../components/ui/Button";
 import { Box } from "../components/ui/Box";
-import Input from "../components/ui/Input";
+import { Input } from "../components/ui/Input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createUser } from "../requests/POST";
+import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../context/userContext";
 
 function AuthPage() {
    const [authMode, setAuthMode] = useState<"REG" | "LOG" | null>(null);
@@ -35,8 +37,8 @@ function AuthPage() {
 }
 
 const authSchema = z.object({
-   login: z.string().min(1, "Login is required"),
-   email: z.string().email("Invalid email").optional(),
+   username: z.string().min(1, "Username is required"),
+   email: z.string().email("Invalid email"),
    password: z.string().min(6, "Password must be at least 6 characters")
 });
 
@@ -46,15 +48,21 @@ function AuthForm({ authMode }: { authMode: "REG" | "LOG" }) {
    const {
       register,
       handleSubmit,
-      formState: { errors }
+      formState: { errors, isSubmitting }
    } = useForm<AuthFormData>({
       resolver: zodResolver(authSchema)
    });
 
+   const navigateTo = useNavigate();
+   const { userData, setUserData } = useUserContext();
+
    const onSubmit = async (data: AuthFormData) => {
-      console.log("ya3");
-      await createUser(data);
-      return "2";
+      console.log(data);
+      const res = await createUser(data, userData);
+      if (res?.status === 201) {
+         setUserData({ ...data, id: res.data.id });
+         navigateTo("/email")
+      } else console.log("something went wrong");
    };
 
    return (
@@ -68,22 +76,34 @@ function AuthForm({ authMode }: { authMode: "REG" | "LOG" }) {
                   ? "Create an account"
                   : "Log into an account"}
             </h2>
-            <Input register={register("login")} placeholder="Login" />
+            <Input
+               register={register("username")}
+               placeholder="Username"
+               error={errors.username}
+            />
             {authMode === "REG" && (
                <Input
                   register={register("email")}
                   placeholder="Email"
-                  type="email"
+                  error={errors.email}
                />
             )}
             <Input
                register={register("password")}
                placeholder="Password"
                type="password"
+               error={errors.password}
             />
-            {JSON.stringify(errors)}
-            {authMode == "REG" && <Button>Sign up</Button>}
-            {authMode == "LOG" && <Button>Sign in</Button>}
+            {isSubmitting ? (
+               <p className="py-2 px-4 text-center">
+                  <i className="pi pi-spin pi-spinner"></i>
+               </p>
+            ) : (
+               <>
+                  {authMode === "REG" && <Button>Sign up</Button>}
+                  {authMode === "LOG" && <Button>Sign in</Button>}
+               </>
+            )}
          </form>
       </Box>
    );
