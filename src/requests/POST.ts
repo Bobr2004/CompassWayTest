@@ -1,4 +1,5 @@
 import { API } from "../config/server.config";
+import { authFromUserData, userType } from "../helpers/userAuthHelpers";
 
 type createUserBody = {
    username: string;
@@ -6,21 +7,12 @@ type createUserBody = {
    password: string;
 };
 
-type userType = {
-   id: string;
-   username: string;
-   email: string;
-   password: string;
-};
-
 const createUser = async (body: createUserBody, userData: userType) => {
-   const username = userData.username || "front9778";
-   const password = userData.password || "custompass1";
    try {
       const res = await API.post("/users/", body, {
          headers: {
             "Content-Type": "application/json",
-            Authorization: `Basic ${btoa(`${username}:${password}`)}`
+            ...authFromUserData(userData)
          }
       });
       return res;
@@ -53,4 +45,4 @@ const createUser = async (body: createUserBody, userData: userType) => {
 //    console.log(res);
 // };
 
-export { createUser};
+export { createUser };

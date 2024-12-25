@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { Box } from "../components/ui/Box";
 import { Input } from "../components/ui/Input";
@@ -8,9 +8,35 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createUser } from "../requests/POST";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/userContext";
+import { getCurrentUser } from "../requests/GET";
+import { isUserEmpty } from "../helpers/userAuthHelpers";
 
 function AuthPage() {
    const [authMode, setAuthMode] = useState<"REG" | "LOG" | null>(null);
+   const navigateTo = useNavigate();
+   const { userData } = useUserContext();
+
+   const [loading, setLoading] = useState(true);
+
+   useEffect(() => {
+      if (isUserEmpty(userData)) setLoading(false);
+      else
+         (async () => {
+            const currentUser = await getCurrentUser(userData);
+            if (currentUser) navigateTo("/email");
+            else setLoading(false);
+         })();
+   });
+
+   if (loading)
+      return (
+         <section className="container mx-auto mt-8 flex flex-col items-center gap-4">
+            <p style={{ fontSize: "6rem" }}>
+               <i className="pi pi-spin pi-cog"></i>
+            </p>
+         </section>
+      );
+
    return (
       <>
          <section className="container mx-auto mt-8 flex flex-col items-center gap-4">
@@ -61,7 +87,7 @@ function AuthForm({ authMode }: { authMode: "REG" | "LOG" }) {
       const res = await createUser(data, userData);
       if (res?.status === 201) {
          setUserData({ ...data, id: res.data.id });
-         navigateTo("/email")
+         navigateTo("/email");
       } else console.log("something went wrong");
    };
 
