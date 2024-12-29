@@ -30,8 +30,8 @@ function AuthPage() {
 
    if (loading)
       return (
-         <section className="container mx-auto mt-8 flex flex-col items-center gap-4">
-            <p style={{ fontSize: "6rem" }}>
+         <section>
+            <p style={{ fontSize: "6rem" }} className="text-center mt-4">
                <i className="pi pi-spin pi-cog"></i>
             </p>
          </section>
@@ -39,22 +39,24 @@ function AuthPage() {
 
    return (
       <>
-         <section className="container mx-auto mt-8 flex flex-col items-center gap-4">
+         <section className="flex flex-col gap-2">
             <h2 className="text-xl text-center">Authentication</h2>
-            <div className="grid grid-cols-2 gap-2 w-[300px]">
-               <Button
-                  onClick={() => setAuthMode("REG")}
-                  isActive={authMode === "REG"}
-               >
-                  Registration
-               </Button>
+            <div className="flex justify-center">
+               <div className="grid grid-cols-2 gap-2 w-[300px] justify-center">
+                  <Button
+                     onClick={() => setAuthMode("REG")}
+                     isActive={authMode === "REG"}
+                  >
+                     Registration
+                  </Button>
 
-               <Button
-                  onClick={() => setAuthMode("LOG")}
-                  isActive={authMode === "LOG"}
-               >
-                  Login
-               </Button>
+                  <Button
+                     onClick={() => setAuthMode("LOG")}
+                     isActive={authMode === "LOG"}
+                  >
+                     Login
+                  </Button>
+               </div>
             </div>
             {authMode && <AuthForm {...{ authMode }} />}
          </section>
@@ -92,9 +94,9 @@ function AuthForm({ authMode }: { authMode: "REG" | "LOG" }) {
    };
 
    return (
-      <Box>
+      <Box className="mx-auto w-[300px] mt-4">
          <form
-            className="w-[300px] flex flex-col gap-2"
+            className="flex flex-col gap-2"
             onSubmit={handleSubmit(onSubmit)}
          >
             <h2 className="text-center text-lg">
@@ -126,8 +128,7 @@ function AuthForm({ authMode }: { authMode: "REG" | "LOG" }) {
                </p>
             ) : (
                <>
-                  {authMode === "REG" && <Button>Sign up</Button>}
-                  {authMode === "LOG" && <Button>Sign in</Button>}
+                  <Button>{authMode === "REG" ? "Sign up" : "Sign in"}</Button>
                </>
             )}
          </form>

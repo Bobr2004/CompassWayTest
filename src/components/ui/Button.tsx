@@ -9,7 +9,7 @@ function Button({ children, onClick, isActive }: ButtonProps) {
    return (
       <button
          onClick={onClick}
-         className={`py-2 px-4 border border-stone-200 rounded-lg transition-all ${
+         className={`py-2 px-4 border border-stone-200 rounded-lg transition-all hover:bg-stone-50 ${
             isActive ? "button-active" : ""
          }`}
       >

@@ -16,6 +16,7 @@ type userType = {
 type userContextType = {
    userData: userType;
    setUserData: (usr: userType) => void;
+   removeUser: () => void;
 };
 
 const unknownUser = {
@@ -27,7 +28,8 @@ const unknownUser = {
 
 const userContext = createContext<userContextType>({
    userData: unknownUser,
-   setUserData: () => {}
+   setUserData: () => {},
+   removeUser: () => {}
 });
 
 function UserContextProvider({ children }: PropsWithChildren) {
@@ -37,12 +39,16 @@ function UserContextProvider({ children }: PropsWithChildren) {
       return unknownUser;
    });
 
+   const removeUser = () => {
+      setUserData({ ...unknownUser });
+   };
+
    useEffect(() => {
       localStorage.setItem("userData", JSON.stringify(userData));
    }, [userData]);
 
    return (
-      <userContext.Provider value={{ userData, setUserData }}>
+      <userContext.Provider value={{ userData, setUserData, removeUser }}>
          {children}
       </userContext.Provider>
    );

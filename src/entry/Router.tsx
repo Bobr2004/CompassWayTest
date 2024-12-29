@@ -8,7 +8,7 @@ function Router() {
          <Routes>
             <Route path="/" element={<Layout />}>
                <Route index path="/" element={<AuthPage />} />
-               <Route index path="email" element={<EmailPage />} />
+               <Route path="email" element={<EmailPage />} />
                <Route path="*" element={<p>404</p>} />
             </Route>
          </Routes>
@@ -20,9 +20,11 @@ function Layout() {
    return (
       <>
          <header className="border-b border-stone-200 p-4">
-            <h1 className="text-3xl font-bold text-center">CompassWay Test App</h1>
+            <h1 className="text-3xl font-bold text-center">
+               CompassWay Test App
+            </h1>
          </header>
-         <main>
+         <main className="container mx-auto mt-8 flex flex-col gap-4">
             <Outlet />
          </main>
       </>

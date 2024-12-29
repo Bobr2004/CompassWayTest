@@ -18,6 +18,23 @@ const createUser = async (body: createUserBody, userData: userType) => {
       return res;
    } catch (err) {
       console.log(err);
+      return null;
+   }
+};
+
+type sendEmailBody = {
+   message: string;
+   sender: number;
+   recipient: string;
+   subject: string;
+};
+
+const sendEmail = async (body: sendEmailBody, userData: userType) => {
+   try {
+      const res = await API.post("/email")
+   } catch (err) {
+      console.log(err);
+      return null;
    }
 };
 
